@@ -4,6 +4,7 @@
 # https://www.udemy.com/data-science-logistic-regression-in-python
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 N = 100
 D = 2
@@ -21,7 +22,8 @@ X[50:,:] = X[50:,:] + 2*np.ones((50,D))
 T = np.array([0]*50 + [1]*50)
 
 # add a column of ones
-ones = np.array([[1]*N]).T
+# ones = np.array([[1]*N]).T # old
+ones = np.ones((N, 1))
 Xb = np.concatenate((ones, X), axis=1)
 
 # randomly initialize the weights
@@ -54,7 +56,8 @@ for i in xrange(100):
         print cross_entropy(T, Y)
 
     # gradient descent weight udpate
-    w += learning_rate * np.dot((T - Y).T, Xb)
+    # w += learning_rate * np.dot((T - Y).T, Xb) # old
+    w += learning_rate * Xb.T.dot(T - Y)
 
     # recalculate Y
     Y = sigmoid(Xb.dot(w))
@@ -62,4 +65,10 @@ for i in xrange(100):
 
 print "Final w:", w
 
+# plot the data and separating line
+plt.scatter(X[:,0], X[:,1], c=T, s=100, alpha=0.5)
+x_axis = np.linspace(-6, 6, 100)
+y_axis = -(w[0] + x_axis*w[1]) / w[2]
+plt.plot(x_axis, y_axis)
+plt.show()
 
